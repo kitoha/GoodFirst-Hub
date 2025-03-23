@@ -1,1 +1,3 @@
-rootProject.name = 'goodfirst-hub'
+rootProject.name = 'goodfirst_hub'
+include 'domain', 'api', 'batch'
+
