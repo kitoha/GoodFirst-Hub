@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3308/goodFirstHubDB?useSSL=false&&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: goodFirst
+    password: goodFirst
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+  batch:
+    job:
+      enabled: true
+      names: ${job.name:NONE}
+    jdbc:
+      initialize-schema: always
