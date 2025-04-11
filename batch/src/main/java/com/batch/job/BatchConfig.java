@@ -1,10 +1,8 @@
 package com.batch.job;
 
-import com.batch.model.IssueRecord;
-import lombok.RequiredArgsConstructor;
+import com.batch.model.RepositoryRecord;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -37,7 +35,7 @@ public class BatchConfig {
       PlatformTransactionManager transactionManager,
       GitHubApiService gitHubApiService){
     return new StepBuilder("goodFirstSearchStep", jobRepository)
-        .<IssueRecord, IssueRecord>chunk(10, transactionManager)
+        .<RepositoryRecord, RepositoryRecord>chunk(10, transactionManager)
         .reader(githubIssueReader(gitHubApiService))
         .processor(githubIssueProcessor())
         .writer(githubIssueWriter())
@@ -45,17 +43,17 @@ public class BatchConfig {
   }
 
   @Bean
-  public ItemReader<IssueRecord> githubIssueReader(GitHubApiService gitHubApiService){
+  public ItemReader<RepositoryRecord> githubIssueReader(GitHubApiService gitHubApiService){
     return new GitHubIssueReader(gitHubApiService);
   }
 
   @Bean
-  public ItemProcessor<IssueRecord, IssueRecord> githubIssueProcessor(){
+  public ItemProcessor<RepositoryRecord, RepositoryRecord> githubIssueProcessor(){
     return new GitHubIssueProcessor();
   }
 
   @Bean
-  public ItemWriter<IssueRecord> githubIssueWriter(){
+  public ItemWriter<RepositoryRecord> githubIssueWriter(){
     return new GitHubIssueWriter();
   }
 

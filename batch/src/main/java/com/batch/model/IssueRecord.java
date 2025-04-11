@@ -1,15 +1,21 @@
 package com.batch.model;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
 public class IssueRecord {
-  private int issueNumber;
+  private int number;
   private String title;
+  private String body;
+  private String htmlUrl;
+  private String createdAt;
+  private String updatedAt;
   private int commentCount;
-  private String url;
-  private LocalDateTime createdAt;
+  private String issuer;
+  private List<String> assignedUser;
+  private List<GitHubLabel> labels;
+  private int reactionCount;
 }

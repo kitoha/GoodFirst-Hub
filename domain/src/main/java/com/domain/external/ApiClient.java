@@ -1,6 +1,7 @@
 package com.domain.external;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,9 @@ import org.springframework.web.client.RestTemplate;
 public class ApiClient {
 
   private final RestTemplate restTemplate;
+
+  @Value("${GITHUB_TOKEN}")
+  private String githubToken;
 
   public <T> ResponseEntity<T> get(String url, HttpHeaders headers, Class<T> responseType,
       Object... pathVariable) {
@@ -36,7 +40,7 @@ public class ApiClient {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("Accept", "application/vnd.github+json");
-    headers.set("User-Agent", "GoodFirstHub");
+    headers.set(HttpHeaders.AUTHORIZATION,"Bearer " + githubToken);
     return headers;
   }
 

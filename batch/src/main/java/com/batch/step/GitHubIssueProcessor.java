@@ -1,18 +1,14 @@
 package com.batch.step;
 
-import com.batch.model.IssueRecord;
-import java.time.LocalDateTime;
+import com.batch.model.RepositoryRecord;
 import org.springframework.batch.item.ItemProcessor;
 
-public class GitHubIssueProcessor implements ItemProcessor<IssueRecord, IssueRecord> {
+public class GitHubIssueProcessor implements ItemProcessor<RepositoryRecord, RepositoryRecord> {
 
   @Override
-  public IssueRecord process(IssueRecord item) throws Exception {
+  public RepositoryRecord process(RepositoryRecord item) throws Exception {
 
-    LocalDateTime beforeYear = LocalDateTime.now().minusYears(1);
-    if(item.getCreatedAt().isBefore(beforeYear)){
-      return null;
-    }
+    if (item.getIssues().isEmpty()) return null;
 
     return item;
   }
