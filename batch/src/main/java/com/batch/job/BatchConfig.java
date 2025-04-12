@@ -1,6 +1,10 @@
 package com.batch.job;
 
 import com.batch.model.RepositoryRecord;
+import com.domain.repository.GithubRepository;
+import com.domain.repository.IssueRepository;
+import com.domain.repository.LabelRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -19,7 +23,12 @@ import com.batch.step.GitHubIssueReader;
 import com.batch.step.GitHubIssueWriter;
 
 @Configuration
+@RequiredArgsConstructor
 public class BatchConfig {
+
+  private final GithubRepository gitHubRepository;
+  private final IssueRepository issueRepository;
+  private final LabelRepository labelRepository;
   @Bean
   public Job goodFirstSearchJob(JobRepository jobRepository,
       PlatformTransactionManager transactionManager,
@@ -54,7 +63,7 @@ public class BatchConfig {
 
   @Bean
   public ItemWriter<RepositoryRecord> githubIssueWriter(){
-    return new GitHubIssueWriter();
+    return new GitHubIssueWriter(gitHubRepository, issueRepository, labelRepository);
   }
 
 

@@ -1,6 +1,6 @@
 package com.batch.step;
 
-import com.batch.converter.IssueItemConverter;
+import com.batch.converter.IssueDtoConverter;
 import com.batch.model.GitHubIssueItem;
 import com.batch.model.GitHubRepositoryItem;
 import com.batch.model.IssueRecord;
@@ -42,7 +42,7 @@ public class GitHubIssueReader implements ItemReader<RepositoryRecord> {
 
     for(GitHubRepositoryItem item : repositoryItems) {
       List<GitHubIssueItem> issueItems = gitHubApiService.fetchIssues(item.getOwner().getLogin(), item.getRepositoryName());
-      List<IssueRecord> issueRecords = issueItems.stream().map(IssueItemConverter::convertToRecord).toList();
+      List<IssueRecord> issueRecords = issueItems.stream().map(IssueDtoConverter::convertToRecord).toList();
       RepositoryRecord repositoryRecord  = RepositoryRecord.builder()
           .repositoryName(item.getRepositoryName())
           .owner(item.getOwner().getLogin())
