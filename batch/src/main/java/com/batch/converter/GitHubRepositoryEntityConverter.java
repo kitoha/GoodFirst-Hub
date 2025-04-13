@@ -14,6 +14,7 @@ public class GitHubRepositoryEntityConverter {
         .name(record.getRepositoryName())
         .owner(record.getOwner())
         .address(record.getAddress())
+        .primaryLanguage(record.getLanguage())
         .starCount(record.getStarCount())
         .build();
   }

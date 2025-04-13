@@ -1,6 +1,7 @@
 package com.domain.entity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -22,12 +23,19 @@ public class GitHubRepositoryEntity {
   @Id
   private Long id;
 
+  @Column
   private String name;
 
+  @Column
   private String owner;
 
+  @Column
   private String address;
 
+  @Column(name = "primary_language")
+  private String primaryLanguage;
+
+  @Column
   private int starCount;
 
   @Builder.Default

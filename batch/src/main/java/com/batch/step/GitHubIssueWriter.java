@@ -2,7 +2,7 @@ package com.batch.step;
 
 import static com.batch.converter.GitHubRepositoryEntityConverter.convertToGitHubRepositoryEntity;
 import static com.batch.converter.IssueDtoConverter.convertToIssueEntity;
-import static com.batch.converter.LabelDtoConverter.convertToLabelEntity;
+import static com.batch.label.converter.LabelDtoConverter.convertToLabelEntity;
 
 import com.batch.model.GitHubLabel;
 import com.batch.model.IssueRecord;

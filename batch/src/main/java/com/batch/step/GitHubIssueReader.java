@@ -48,6 +48,7 @@ public class GitHubIssueReader implements ItemReader<RepositoryRecord> {
           .owner(item.getOwner().getLogin())
           .address(item.getHtmlUrl())
           .starCount(item.getStarCount())
+          .language(item.getLanguage())
           .issues(issueRecords)
           .build();
       repositoryRecords.add(repositoryRecord);

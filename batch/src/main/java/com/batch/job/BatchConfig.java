@@ -1,5 +1,6 @@
 package com.batch.job;
 
+import com.batch.label.service.LabelNormalizer;
 import com.batch.model.RepositoryRecord;
 import com.domain.repository.GithubRepository;
 import com.domain.repository.IssueRepository;
@@ -29,11 +30,15 @@ public class BatchConfig {
   private final GithubRepository gitHubRepository;
   private final IssueRepository issueRepository;
   private final LabelRepository labelRepository;
+  private final LabelNormalizer labelNormalizer;
+  private static final String GOOD_FIRST_SEARCH_JOB = "goodFirstSearchJob";
+  private static final String GOOD_FIRST_SEARCH_STEP = "goodFirstSearchStep";
+  private static final Integer CHUNK_SIZE = 10;
   @Bean
   public Job goodFirstSearchJob(JobRepository jobRepository,
       PlatformTransactionManager transactionManager,
       GitHubApiService gitHubApiService){
-    return new JobBuilder("goodFirstSearchJob", jobRepository)
+    return new JobBuilder(GOOD_FIRST_SEARCH_JOB, jobRepository)
         .incrementer(new RunIdIncrementer())
         .start(goodFirstSearchStep(jobRepository, transactionManager, gitHubApiService))
         .build();
@@ -43,8 +48,8 @@ public class BatchConfig {
   public Step goodFirstSearchStep(JobRepository jobRepository,
       PlatformTransactionManager transactionManager,
       GitHubApiService gitHubApiService){
-    return new StepBuilder("goodFirstSearchStep", jobRepository)
-        .<RepositoryRecord, RepositoryRecord>chunk(10, transactionManager)
+    return new StepBuilder(GOOD_FIRST_SEARCH_STEP, jobRepository)
+        .<RepositoryRecord, RepositoryRecord>chunk(CHUNK_SIZE, transactionManager)
         .reader(githubIssueReader(gitHubApiService))
         .processor(githubIssueProcessor())
         .writer(githubIssueWriter())
@@ -58,7 +63,7 @@ public class BatchConfig {
 
   @Bean
   public ItemProcessor<RepositoryRecord, RepositoryRecord> githubIssueProcessor(){
-    return new GitHubIssueProcessor();
+    return new GitHubIssueProcessor(labelNormalizer);
   }
 
   @Bean

@@ -13,4 +13,6 @@ public class GitHubRepositoryItem {
   private int starCount;
   @JsonProperty("html_url")
   private String htmlUrl;
+  @JsonProperty("language")
+  private String language;
 }

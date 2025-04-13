@@ -1,6 +1,7 @@
 package com.domain.entity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -27,20 +28,28 @@ public class IssueEntity {
   @Id
   private Long id;
 
+  @Column
   private int issueNumber;
 
+  @Column
   private String title;
 
+  @Column
   private String url;
 
+  @Column
   private String issuer;
 
+  @Column
   private int commentCount;
 
+  @Column
   private int reactionCount;
 
+  @Column
   private LocalDateTime cratedAt;
 
+  @Column
   private LocalDateTime updatedAt;
 
   @Setter
