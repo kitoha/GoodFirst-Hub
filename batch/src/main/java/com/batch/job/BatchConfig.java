@@ -2,9 +2,9 @@ package com.batch.job;
 
 import com.batch.label.service.LabelNormalizer;
 import com.batch.model.RepositoryRecord;
-import com.domain.repository.GithubRepository;
-import com.domain.repository.IssueRepository;
-import com.domain.repository.LabelRepository;
+import com.domain.repository.GithubJpaRepository;
+import com.domain.repository.IssueJpaRepository;
+import com.domain.repository.LabelJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -27,9 +27,9 @@ import com.batch.step.GitHubIssueWriter;
 @RequiredArgsConstructor
 public class BatchConfig {
 
-  private final GithubRepository gitHubRepository;
-  private final IssueRepository issueRepository;
-  private final LabelRepository labelRepository;
+  private final GithubJpaRepository gitHubJpaRepository;
+  private final IssueJpaRepository issueJpaRepository;
+  private final LabelJpaRepository labelJpaRepository;
   private final LabelNormalizer labelNormalizer;
   private static final String GOOD_FIRST_SEARCH_JOB = "goodFirstSearchJob";
   private static final String GOOD_FIRST_SEARCH_STEP = "goodFirstSearchStep";
@@ -68,7 +68,7 @@ public class BatchConfig {
 
   @Bean
   public ItemWriter<RepositoryRecord> githubIssueWriter(){
-    return new GitHubIssueWriter(gitHubRepository, issueRepository, labelRepository);
+    return new GitHubIssueWriter(gitHubJpaRepository, issueJpaRepository, labelJpaRepository);
   }
 
 

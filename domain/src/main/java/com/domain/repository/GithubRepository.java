@@ -1,11 +1,12 @@
 package com.domain.repository;
 
-import com.domain.entity.GitHubRepositoryEntity;
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.domain.dto.GithubRepositoryDto;
+import com.domain.dto.IssueDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-@Repository
-public interface GithubRepository extends JpaRepository<GitHubRepositoryEntity, Long> {
-  Optional<GitHubRepositoryEntity> findByNameAndOwner(String name, String owner);
+public interface GithubRepository {
+  Page<GithubRepositoryDto> getRepositories(Pageable pageable);
+
+  Page<IssueDto> getIssuesForRepository(String repositoryId, Pageable pageable);
 }
