@@ -14,8 +14,10 @@ import com.domain.entity.LabelEntity;
 import com.domain.repository.GithubJpaRepository;
 import com.domain.repository.IssueJpaRepository;
 import com.domain.repository.LabelJpaRepository;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
@@ -37,20 +39,27 @@ public class GitHubIssueWriter implements ItemWriter<RepositoryRecord> {
 
   private void saveIssues(List<IssueRecord> issueRecords, GitHubRepositoryEntity repository) {
     for (IssueRecord issueRecord : issueRecords) {
-      IssueEntity issue = convertToIssueEntity(issueRecord, repository);
-      issueJpaRepository.save(issue);
-      saveLabels(issueRecord.getLabels(), issue, repository);
+      Optional<IssueEntity> issueEntity = issueJpaRepository.findByRepositoryAndUrl(repository, issueRecord.getHtmlUrl());
+      if(issueEntity.isEmpty()) {
+        IssueEntity issue = convertToIssueEntity(issueRecord, repository);
+        saveLabels(issueRecord.getLabels(), issue, repository);
+        issueJpaRepository.save(issue);
+      }
     }
   }
 
   private void saveLabels(List<GitHubLabel> labels, IssueEntity issue, GitHubRepositoryEntity repository) {
+    Set<String> addedLabelNames = new HashSet<>();
+
     for (GitHubLabel labelDto : labels) {
+      if (addedLabelNames.contains(labelDto.getName())) continue;
       LabelEntity label = saveOrGetLabel(labelDto, repository);
       IssueLabelEntity issueLabel = IssueLabelEntity.builder()
           .issue(issue)
           .label(label)
           .build();
       issue.getIssuelabel().add(issueLabel);
+      addedLabelNames.add(labelDto.getName());
     }
   }
 

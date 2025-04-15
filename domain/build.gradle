@@ -4,7 +4,13 @@ plugins {
     id 'java-library'
 }
 
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "${layout.buildDirectory.get()}/generated/querydsl"
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 dependencies {
     implementation 'io.hypersistence:hypersistence-tsid:2.1.4'
