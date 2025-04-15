@@ -81,7 +81,7 @@ public class GithubRepositoryImpl implements GithubRepository{
         .toList();
 
     List<Tuple> labelTuples = queryFactory
-        .select(issueLabel.issue.id, label.id, label.name, label.color)
+        .select(issueLabel.issue.id, label.name, label.color)
         .from(issueLabel)
         .join(issueLabel.label, label)
         .where(issueLabel.issue.id.in(issuedIds))
@@ -116,13 +116,12 @@ public class GithubRepositoryImpl implements GithubRepository{
 
     for (Tuple tuple : labelTuples) {
       Long issueId = tuple.get(QIssueLabelEntity.issueLabelEntity.issue.id);
-      Long labelId = tuple.get(QLabelEntity.labelEntity.id);
       String name = tuple.get(QLabelEntity.labelEntity.name);
       String color = tuple.get(QLabelEntity.labelEntity.color);
 
       labelMap
           .computeIfAbsent(issueId, k -> new ArrayList<>())
-          .add(new LabelDto(labelId, name, color));
+          .add(new LabelDto(name, color));
     }
 
     return labelMap;

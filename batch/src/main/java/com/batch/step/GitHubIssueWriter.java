@@ -61,6 +61,8 @@ public class GitHubIssueWriter implements ItemWriter<RepositoryRecord> {
       issue.getIssuelabel().add(issueLabel);
       addedLabelNames.add(labelDto.getName());
     }
+
+
   }
 
   private LabelEntity saveOrGetLabel(GitHubLabel labelDto, GitHubRepositoryEntity repository) {
