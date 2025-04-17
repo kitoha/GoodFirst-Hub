@@ -19,9 +19,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import com.batch.service.GitHubApiService;
-import com.batch.step.GitHubIssueProcessor;
-import com.batch.step.GitHubIssueReader;
-import com.batch.step.GitHubIssueWriter;
+import com.batch.step.githubsync.GitHubIssueProcessor;
+import com.batch.step.githubsync.GitHubIssueReader;
+import com.batch.step.githubsync.GitHubIssueWriter;
 
 @Configuration
 @RequiredArgsConstructor

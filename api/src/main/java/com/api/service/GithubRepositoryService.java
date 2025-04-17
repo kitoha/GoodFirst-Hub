@@ -14,7 +14,7 @@ public class GithubRepositoryService {
 
   private final GithubRepositoryImpl githubRepository;
 
-  public Page<GithubRepositoryDto> getRepositories(Pageable pageable) {
+  public Page<GithubRepositoryDto> getRepositories(String language, String label, Pageable pageable) {
     return githubRepository.getRepositories(pageable);
   }
 

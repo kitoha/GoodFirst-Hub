@@ -1,4 +1,4 @@
-package com.batch.step;
+package com.batch.step.githubsync;
 
 import static com.batch.converter.GitHubRepositoryEntityConverter.convertToGitHubRepositoryEntity;
 import static com.batch.converter.IssueDtoConverter.convertToIssueEntity;

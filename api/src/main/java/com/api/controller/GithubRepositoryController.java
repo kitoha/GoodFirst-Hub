@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,13 +23,19 @@ public class GithubRepositoryController {
   private final GithubRepositoryService githubRepositoryService;
 
   @GetMapping("")
-  public ResponseEntity<Page<GithubRepositoryDto>> getRepositories(Pageable pageable){
-    return ResponseEntity.ok(githubRepositoryService.getRepositories(pageable));
+  public ResponseEntity<Page<GithubRepositoryDto>> getRepositories(
+      @RequestParam(required = false) String language,
+      @RequestParam(required = false) String label,
+      Pageable pageable) {
+    return ResponseEntity.ok(githubRepositoryService.getRepositories(language, label, pageable));
   }
 
   @GetMapping("/{id}/issues")
-  public ResponseEntity<Page<IssueDto>> getIssuesForRepository(@PathVariable("id") String repositoryId, Pageable pageable){
-    return ResponseEntity.ok(githubRepositoryService.getIssuesForRepository(repositoryId, pageable));
+  public ResponseEntity<Page<IssueDto>> getIssuesForRepository(
+      @PathVariable("id") String repositoryId, Pageable pageable) {
+    return ResponseEntity.ok(
+        githubRepositoryService.getIssuesForRepository(repositoryId, pageable));
   }
+
 
 }

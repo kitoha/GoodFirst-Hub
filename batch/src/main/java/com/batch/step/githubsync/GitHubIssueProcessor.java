@@ -1,4 +1,4 @@
-package com.batch.step;
+package com.batch.step.githubsync;
 
 import com.batch.label.service.LabelNormalizer;
 import com.batch.model.GitHubLabel;
