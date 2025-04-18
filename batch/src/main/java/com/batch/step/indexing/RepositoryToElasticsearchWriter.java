@@ -3,7 +3,7 @@ package com.batch.step.indexing;
 import com.domain.document.GitHubRepositoryDocument;
 import com.domain.entity.GitHubRepositoryEntity;
 import com.domain.entity.IssueEntity;
-import com.domain.repository.GithubJpaRepository;
+import com.domain.repository.GithubRepository;
 import com.domain.repository.IssueJpaRepository;
 import com.domain.repository.elasticsearch.GitHubEsRepository;
 import com.domain.util.TsidUtil;
@@ -18,13 +18,13 @@ import org.springframework.batch.item.ItemWriter;
 public class RepositoryToElasticsearchWriter implements ItemWriter<GitHubRepositoryEntity> {
 
   private final IssueJpaRepository issueJpaRepository;
-  private final GithubJpaRepository githubJpaRepository;
+  private final GithubRepository githubRepository;
   private final GitHubEsRepository gitHubEsRepository;
 
   public RepositoryToElasticsearchWriter(IssueJpaRepository issueJpaRepository,
-      GithubJpaRepository githubJpaRepository, GitHubEsRepository gitHubEsRepository) {
+      GithubRepository githubRepository, GitHubEsRepository gitHubEsRepository) {
     this.issueJpaRepository = issueJpaRepository;
-    this.githubJpaRepository = githubJpaRepository;
+    this.githubRepository = githubRepository;
     this.gitHubEsRepository = gitHubEsRepository;
   }
 
@@ -49,7 +49,9 @@ public class RepositoryToElasticsearchWriter implements ItemWriter<GitHubReposit
         .map(repo -> getGitHubRepositoryDocument(repo, issueMap.getOrDefault(repo.getId(), Collections.emptyList())))
         .toList();
 
+    gitHubEsRepository.saveAll(documents);
 
+    githubRepository.markAllIndexed(repoIds);
   }
 
   private GitHubRepositoryDocument getGitHubRepositoryDocument(GitHubRepositoryEntity repositoryEntities, List<IssueEntity> issues){

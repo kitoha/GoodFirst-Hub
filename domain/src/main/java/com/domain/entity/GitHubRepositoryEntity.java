@@ -44,6 +44,7 @@ public class GitHubRepositoryEntity {
   @OneToMany(mappedBy = "repository", cascade = CascadeType.ALL)
   List<IssueEntity> issues = new ArrayList<>();
 
+  @Builder.Default
   @Column(nullable = false)
   private boolean indexed = false; // Es 저장 여부
 

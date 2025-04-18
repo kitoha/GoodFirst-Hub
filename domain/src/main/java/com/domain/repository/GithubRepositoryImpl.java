@@ -11,6 +11,8 @@ import com.domain.entity.QLabelEntity;
 import com.domain.util.TsidUtil;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,9 @@ import org.springframework.stereotype.Repository;
 public class GithubRepositoryImpl implements GithubRepository{
 
   private final JPAQueryFactory queryFactory;
+
+  @PersistenceContext
+  private final EntityManager em;
 
   @Override
   public Page<GithubRepositoryDto> getRepositories(Pageable pageable) {
@@ -109,6 +114,21 @@ public class GithubRepositoryImpl implements GithubRepository{
         .distinct()
         .from(repo)
         .fetch();
+
+  }
+
+  @Override
+  public void markAllIndexed(List<Long> repoIds) {
+    QGitHubRepositoryEntity repo = QGitHubRepositoryEntity.gitHubRepositoryEntity;
+
+    queryFactory.update(repo)
+        .set(repo.indexed, true)
+        .where(repo.id.in(repoIds))
+        .execute();
+
+    em.flush();
+    em.clear();
+
   }
 
   private Map<Long, List<LabelDto>> buildLabelMap(List<Tuple> labelTuples) {

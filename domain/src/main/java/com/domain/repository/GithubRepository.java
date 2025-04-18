@@ -10,4 +10,6 @@ public interface GithubRepository {
   Page<GithubRepositoryDto> getRepositories(Pageable pageable);
   Page<IssueDto> getIssuesForRepository(String repositoryId, Pageable pageable);
   List<String> findAllLanguage();
+
+  void markAllIndexed(List<Long> repoIds);
 }
