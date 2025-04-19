@@ -15,9 +15,8 @@ spring:
       names: ${job.name:NONE}
     jdbc:
       initialize-schema: always
-  data:
-    elasticsearch:
-      client:
-        rest:
-          uris: http://localhost:9201
+  elasticsearch:
+    uris: http://localhost:9201
+    repositories:
+      enabled: true
 

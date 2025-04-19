@@ -9,3 +9,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         show_sql: true
+  elasticsearch:
+    uris: http://localhost:9201
+    repositories:
+      enabled: true

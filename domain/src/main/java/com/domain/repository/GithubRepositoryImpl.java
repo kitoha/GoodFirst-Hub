@@ -50,6 +50,7 @@ public class GithubRepositoryImpl implements GithubRepository{
             repo.id,
             repo.name,
             repo.owner,
+            repo.address,
             repo.primaryLanguage,
             repo.starCount,
             JPAExpressions
