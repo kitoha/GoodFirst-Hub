@@ -10,6 +10,10 @@ import com.domain.entity.QIssueLabelEntity;
 import com.domain.entity.QLabelEntity;
 import com.domain.util.TsidUtil;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,35 +38,42 @@ public class GithubRepositoryImpl implements GithubRepository{
   private final EntityManager em;
 
   @Override
-  public Page<GithubRepositoryDto> getRepositories(Pageable pageable) {
+  public Page<GithubRepositoryDto> getRepositories(List<String> languages, List<String> labels, Pageable pageable) {
     QGitHubRepositoryEntity repo = QGitHubRepositoryEntity.gitHubRepositoryEntity;
     QIssueEntity issue = QIssueEntity.issueEntity;
+    QIssueLabelEntity issueLabel = QIssueLabelEntity.issueLabelEntity;
+    QLabelEntity labelEntity = QLabelEntity.labelEntity;
 
-    List<Tuple> result = queryFactory
-        .select(repo, issue.count())
+    JPQLQuery<GithubRepositoryDto> query = queryFactory
+        .select(Projections.constructor(
+            GithubRepositoryDto.class,
+            repo.id,
+            repo.name,
+            repo.owner,
+            repo.primaryLanguage,
+            repo.starCount,
+            JPAExpressions
+                .select(issue.count())
+                .from(issue)
+                .leftJoin(issue.issuelabel, issueLabel)
+                .leftJoin(issueLabel.label, labelEntity)
+                .where(
+                    issue.repository.id.eq(repo.id),
+                    labelIn(labels)
+                )
+        ))
         .from(repo)
-        .leftJoin(issue).on(issue.repository.eq(repo))
-        .groupBy(repo.id)
+        .where(languageIn(languages))
+        .orderBy(repo.starCount.desc());
+
+    long total = query.fetchCount();
+
+    List<GithubRepositoryDto> results = query
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
-        .orderBy(repo.id.desc())
         .fetch();
 
-    //noinspection DataFlowIssue
-    List<GithubRepositoryDto> content = result.stream()
-        .map(tuple -> GithubRepositoryDto.from(
-            tuple.get(repo),
-            tuple.get(issue.count())
-        ))
-        .toList();
-
-    Long total = Optional.ofNullable(queryFactory
-            .select(repo.count())
-            .from(repo)
-            .fetchOne())
-        .orElse(0L);
-
-    return new PageImpl<>(content, pageable, total);
+    return new PageImpl<>(results, pageable, total);
   }
 
   @Override
@@ -166,6 +176,18 @@ public class GithubRepositoryImpl implements GithubRepository{
     }
 
     return dtos;
+  }
+
+  private BooleanExpression languageIn(List<String> languages) {
+    return (languages != null && !languages.isEmpty())
+        ? QGitHubRepositoryEntity.gitHubRepositoryEntity.primaryLanguage.in(languages)
+        : null;
+  }
+
+  private BooleanExpression labelIn(List<String> labels) {
+    return (labels != null && !labels.isEmpty())
+        ? QLabelEntity.labelEntity.name.in(labels)
+        : null;
   }
 
 }

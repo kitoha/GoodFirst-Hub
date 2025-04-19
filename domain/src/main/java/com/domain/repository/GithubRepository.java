@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface GithubRepository {
-  Page<GithubRepositoryDto> getRepositories(Pageable pageable);
+  Page<GithubRepositoryDto> getRepositories(List<String> languages, List<String> labels, Pageable pageable);
   Page<IssueDto> getIssuesForRepository(String repositoryId, Pageable pageable);
   List<String> findAllLanguage();
 
