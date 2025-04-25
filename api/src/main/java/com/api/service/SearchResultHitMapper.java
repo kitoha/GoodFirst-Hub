@@ -38,7 +38,8 @@ public class SearchResultHitMapper {
         SearchResultItem.ItemType.REPOSITORY,
         doc.getId(),
         doc.getName(),
-        snippet
+        snippet,
+        null
     );
   }
 
@@ -47,13 +48,14 @@ public class SearchResultHitMapper {
 
     String plain = snippet.replaceAll("<em>", "").replaceAll("</em>", "");
     return doc.getIssueTitles().stream()
-        .filter(i -> i.contains(plain))
+        .filter(i -> i.getTitle().contains(plain))
         .findFirst()
         .map(issue -> new SearchResultItem(
             SearchResultItem.ItemType.ISSUE,
             doc.getId(),
             doc.getName(),
-            snippet
+            snippet,
+            issue.getUrl()
         ));
   }
 }

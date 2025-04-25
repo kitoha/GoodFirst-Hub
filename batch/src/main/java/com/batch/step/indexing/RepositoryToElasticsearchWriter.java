@@ -1,6 +1,7 @@
 package com.batch.step.indexing;
 
 import com.domain.document.GitHubRepositoryDocument;
+import com.domain.document.IssueSummary;
 import com.domain.entity.GitHubRepositoryEntity;
 import com.domain.entity.IssueEntity;
 import com.domain.repository.GithubRepository;
@@ -55,8 +56,8 @@ public class RepositoryToElasticsearchWriter implements ItemWriter<GitHubReposit
   }
 
   private GitHubRepositoryDocument getGitHubRepositoryDocument(GitHubRepositoryEntity repositoryEntities, List<IssueEntity> issues){
-    List<String> titles = issues.stream()
-        .map(IssueEntity::getTitle)
+    List<IssueSummary> titles = issues.stream()
+        .map(issueEntity -> new IssueSummary(issueEntity.getTitle(), issueEntity.getUrl()))
         .collect(Collectors.toList());
 
     String repoId = TsidUtil.encode(repositoryEntities.getId());

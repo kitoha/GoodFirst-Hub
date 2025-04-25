@@ -34,6 +34,5 @@ public class GitHubRepositoryDocument {
   @Field(type = FieldType.Integer)
   private int starCount;
   @Field(type = FieldType.Text)
-  private List<String> issueTitles;
-
+  private List<IssueSummary> issueTitles;
 }
