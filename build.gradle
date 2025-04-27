@@ -1,49 +1,44 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.10'
+	id 'groovy'
+	id 'org.springframework.boot' version '3.3.10' apply false
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.goodfirsthub'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
 allprojects {
 	repositories {
 		mavenCentral()
+	}
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
 	}
 }
 
 subprojects {
 	apply plugin: 'java'
+	apply plugin: 'groovy'
+	apply plugin: 'io.spring.dependency-management'
+
+	dependencies {
+		testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-4.0'
+		testRuntimeOnly 'org.spockframework:spock-spring:2.4-M1-groovy-4.0'
+	}
 
 	tasks.named('test') {
 		useJUnitPlatform()
 	}
 }
 
-//dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	compileOnly 'org.projectlombok:lombok'
-//	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-//	runtimeOnly 'com.mysql:mysql-connector-j'
-//	annotationProcessor 'org.projectlombok:lombok'
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-//}
+project(':api') {
+	apply plugin: 'org.springframework.boot'
+}
 
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
+project(':batch') {
+	apply plugin: 'org.springframework.boot'
+}
